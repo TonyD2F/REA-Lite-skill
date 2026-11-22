@@ -30,7 +30,7 @@ Put the `rea-pro` folder (the folder name must stay `rea-pro` and match the `nam
 | Global (agent-compatible) | `~/.agents/skills/rea-pro/SKILL.md` |
 
 ```bash
-git clone https://github.com/tonyd2f/rea-pro.git
+git clone https://github.com/TonyD2F/REA-Lite-skill.git
 mkdir -p ~/.config/opencode/skills
 cp -r rea-pro/rea-pro ~/.config/opencode/skills/
 bash ~/.config/opencode/skills/rea-pro/scripts/doctor.sh
