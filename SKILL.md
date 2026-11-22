@@ -13,6 +13,9 @@ Successor to leanrea. Same idea (the agent already knows the tools; this file gi
 - **Static first. Never execute the target** unless the user asks, and then only in a disposable sandbox with no network and no secrets. Malware and unknown binaries: static only.
 - Keep secrets (tokens, keys, PII) found in targets out of the chat. Name the location and type, redact the value.
 
+- **Modes.** Default is **Deep, static** (read code and files of targets you may examine). If the user says "clean room" or "don't look inside", switch to **Clean room**: use only observable behavior (public pages as a visitor sees them, screenshots, visible text, user-supplied files and docs), never read the target's code or internals, and say which questions that leaves unanswered. Clean room is a rule you follow, not an OS sandbox.
+- **Approval.** Ask before anything that executes code, installs packages, touches the network, or writes outside the workdir. Installing a project's dependencies runs its scripts; treat that as execution.
+
 ## 1. Rules
 - Work on a copy (`cp --reflink=auto`). One dir per target: `$TMPDIR/re/<name>`. Reuse existing extractions.
 - Route by `file -b` and magic bytes, then the cheapest inventory, then code. Run `scripts/recon.sh` for the first pass.
@@ -28,6 +31,7 @@ Tag every claim in notes and in the answer:
 - **seen**: cite a locator (`file:line`, offset, symbol, string, command output).
 - **inferred**: state the reasoning step and what would confirm it.
 - **unknown**: not found is not absent. List what was not checked and why.
+Give each load-bearing finding a record: **claim | tag | locator | confidence (high/med/low) | coverage (what was and was not examined) | limitations**. Large results: summary first, details on request.
 Static reading is not observed execution; say so when behavior depends on runtime.
 For anything beyond a quick lookup keep `INVESTIGATION.md` in the workdir:
 ```
@@ -81,8 +85,9 @@ Run `bash scripts/doctor.sh` once per session and obey its verdict. You are root
 2. **Recon:** one batched call (`recon.sh`). Strings and imports usually answer "what does it do" before any disassembly.
 3. **Trace from the boundary inward:** native/JS boundary, then the caller class, then IPC/handler registration, then renderer/preload or the wire. For protocols: socket path/format, message framing, auth/peer check, error paths.
 4. **Compare builds:** diff inventories (`nm`, module list, `go version -m`, file lists, hashes) before diffing code.
-5. **Verify:** re-read the cited locator for each load-bearing claim. For a rebuild, run the original and the reimplementation on the same inputs and diff outputs (only if execution is allowed); otherwise label the rebuild untested.
-6. **Deliver:** answer first, then evidence. Offer SPEC.md plus proposed tests for any behavior you describe.
+5. **Verify:** re-read the cited locator for each load-bearing claim.
+6. **Rebuild and compare (only if asked):** build a minimal reimplementation from the SPEC, in the requested stack, without copying logos, images or text you do not own. Compare with the original on the same inputs (outputs, screenshots at a few widths, protocol traces), list every mismatch, refine, and re-check. Execution of the original needs approval; otherwise label the rebuild untested and compare against evidence only.
+7. **Deliver:** answer first, then evidence. Offer SPEC.md plus proposed tests for any behavior you describe.
 
 ## 6. Answer format
 Lead with the answer in 1-3 sentences. Then a short **Evidence** list (claim, tag, locator), **Limits/Unknowns**, and **Next step** if useful. No secrets, no padding. If scope or a tool blocked part of the work, say exactly which part.
