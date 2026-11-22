@@ -1,4 +1,4 @@
-# # rea-pro
+# rea-pro
 
 An agent skill for **evidence-first reverse engineering with plain CLI tools** (no MCP server). It is tuned for **Ubuntu in proot-distro under Termux on Android (aarch64)**, and works on ordinary Linux too.
 
@@ -10,7 +10,7 @@ It is a successor to [leanrea](https://github.com/aicodeking/leanrea): the agent
 - **`rea-pro/scripts/doctor.sh`**: read-only environment probe. Reports architecture, whether proot is likely, whether `strace` really works, free RAM (with a Ghidra/jadx verdict), installed tools, and the exact `apt install` line for what is missing.
 - **`rea-pro/scripts/recon.sh`**: routes a target by magic bytes and prints one capped, batched inventory. Never executes the target. Works on a copy. Falls back gracefully when `file`, `xxd`, `rg` or `sqlite3` are absent.
 
-What it adds over leanrea: Linux and proot commands instead of macOS-only tools, an evidence ledger (`seen` / `inferred` / `unknown`), a resume protocol for long investigations, authorization and prompt-injection gates, RAM-aware tool choice, and a verification step.
+What it adds over leanrea (and ideas borrowed from [Craft Anything](https://github.com/storytold/craft-anything), MIT/Apache-2.0: clean-room vs deep mode, evidence records with confidence/coverage/limitations, rebuild-and-compare, approval before execution): Linux and proot commands instead of macOS-only tools, an evidence ledger (`seen` / `inferred` / `unknown`), a resume protocol for long investigations, authorization and prompt-injection gates, RAM-aware tool choice, and a verification step.
 
 ## Requirements
 
@@ -30,7 +30,7 @@ Put the `rea-pro` folder (the folder name must stay `rea-pro` and match the `nam
 | Global (agent-compatible) | `~/.agents/skills/rea-pro/SKILL.md` |
 
 ```bash
-git clone https://github.com/TonyD2F/rea-pro.git
+git clone https://github.com/tonyd2f/rea-pro.git
 mkdir -p ~/.config/opencode/skills
 cp -r rea-pro/rea-pro ~/.config/opencode/skills/
 bash ~/.config/opencode/skills/rea-pro/scripts/doctor.sh
